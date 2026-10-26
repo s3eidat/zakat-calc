@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Zakat Calc — Zakat Calculator for Savings, Gold &amp; Silver · حاسبة الزكاة | S3eidat Tools</title>
+<meta name="description" content="Calculate zakat on cash, bank savings, gold, silver, investments and receivables minus debts, with nisab by gold (85 g) or silver (595 g). English and Arabic. Free and private.">
+<meta property="og:title" content="Zakat Calc — free, private zakat calculator · حاسبة الزكاة">
+<meta property="og:description" content="Zakat on savings, gold and assets. Runs 100% in your browser.">
+<meta property="og:image" content="screenshot.png">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+</head>
+<body data-tool="zakat-calc">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Zakat Calc <span class="ar-title" lang="ar" dir="rtl">حاسبة الزكاة</span></h1>
+    <p>Add up what you own, take off what you owe now, and see if it reaches the nisab. Zakat is 2.5% of the net amount. Enter today's gold and silver prices yourself; nothing is fetched or sent.</p>
+  </section>
+
+  <div class="zk-grid">
+    <section class="card stack">
+      <div class="row between">
+        <h2>Your wealth <span class="ar" lang="ar" dir="rtl">أموالك</span></h2>
+        <label class="cur-l">Currency <input class="input" id="cur" maxlength="6" autocomplete="off" placeholder="JOD" dir="auto"></label>
+      </div>
+
+      <div class="grid-2 tight">
+        <label class="field"><span>Cash in hand <i lang="ar" dir="rtl">النقد في اليد</i></span><input class="input" id="cash" inputmode="decimal" autocomplete="off" placeholder="0"></label>
+        <label class="field"><span>Bank accounts <i lang="ar" dir="rtl">الأرصدة البنكية</i></span><input class="input" id="bank" inputmode="decimal" autocomplete="off" placeholder="0"></label>
+        <label class="field"><span>Investments, shares <i lang="ar" dir="rtl">الاستثمارات والأسهم</i></span><input class="input" id="inv" inputmode="decimal" autocomplete="off" placeholder="market value"></label>
+        <label class="field"><span>Trade goods <i lang="ar" dir="rtl">عروض التجارة</i></span><input class="input" id="trade" inputmode="decimal" autocomplete="off" placeholder="sale value"></label>
+        <label class="field"><span>Money owed to you <i lang="ar" dir="rtl">ديون لك مرجوّة السداد</i></span><input class="input" id="recv" inputmode="decimal" autocomplete="off" placeholder="likely to be repaid"></label>
+        <label class="field"><span>Debts you owe now <i lang="ar" dir="rtl">ديون حالّة عليك</i></span><input class="input neg" id="debt" inputmode="decimal" autocomplete="off" placeholder="due now (deducted)"></label>
+      </div>
+
+      <h3 class="sub">Gold &amp; silver <span class="ar" lang="ar" dir="rtl">الذهب والفضة</span></h3>
+      <div class="metal">
+        <label class="field"><span>Gold weight <i lang="ar" dir="rtl">وزن الذهب</i></span><span class="adorn"><input class="input" id="gold-g" inputmode="decimal" autocomplete="off" placeholder="0"><i>g</i></span></label>
+        <label class="field"><span>Karat <i lang="ar" dir="rtl">العيار</i></span>
+          <select class="select" id="karat"><option value="24">24K</option><option value="22">22K</option><option value="21">21K</option><option value="18">18K</option></select>
+        </label>
+        <label class="field"><span>24K price / g <i lang="ar" dir="rtl">سعر غرام عيار 24</i></span><input class="input" id="gold-p" inputmode="decimal" autocomplete="off" placeholder="today's price"></label>
+      </div>
+      <div class="metal">
+        <label class="field"><span>Silver weight <i lang="ar" dir="rtl">وزن الفضة</i></span><span class="adorn"><input class="input" id="silver-g" inputmode="decimal" autocomplete="off" placeholder="0"><i>g</i></span></label>
+        <span></span>
+        <label class="field"><span>Silver price / g <i lang="ar" dir="rtl">سعر غرام الفضة</i></span><input class="input" id="silver-p" inputmode="decimal" autocomplete="off" placeholder="today's price"></label>
+      </div>
+
+      <div class="field">
+        <span>Nisab based on <i lang="ar" dir="rtl">النصاب حسب</i></span>
+        <div class="seg full" id="basis" role="group" aria-label="Nisab basis">
+          <button type="button" data-v="gold" aria-pressed="true">Gold · 85 g</button>
+          <button type="button" data-v="silver" aria-pressed="false">Silver · 595 g</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card stack">
+      <h2>Zakat due <span class="ar" lang="ar" dir="rtl">الزكاة الواجبة</span></h2>
+      <div class="zk-hero" id="hero"></div>
+      <dl class="receipt" id="receipt"></dl>
+      <div class="row end"><button class="btn small" id="copy"><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+      <p class="note">This is an estimate to help you prepare. Rulings differ between scholars and schools, for example on jewellery worn regularly, long-term debts and retirement funds. Please consult a trusted scholar for your situation.<br><span lang="ar" dir="rtl" class="ar-block">هذه الحاسبة للتقدير فقط، وتختلف الأحكام بين العلماء والمذاهب (مثل حلي الزينة المستعملة والديون المؤجلة). يُرجى استشارة عالم موثوق.</span></p>
+    </section>
+  </div>
+
+  <section class="card mt">
+    <h2>How it works <span class="ar" lang="ar" dir="rtl">طريقة الحساب</span></h2>
+    <div class="grid-2 how">
+      <ol>
+        <li>Add up zakatable wealth: cash, bank balances, gold and silver, investments at market value, trade goods and money owed to you that you expect back.</li>
+        <li>Subtract debts you must pay now.</li>
+        <li>Compare the net amount with the <b>nisab</b>: the value of 85 g of pure gold, or 595 g of silver. Many scholars prefer the silver nisab for cash because it is lower and benefits more poor people.</li>
+        <li>If the net amount is at or above the nisab and you have held it for one lunar year (<i>hawl</i>), zakat is <b>2.5%</b> of it.</li>
+      </ol>
+      <ol lang="ar" dir="rtl" class="ar-list">
+        <li>اجمع الأموال الزكوية: النقد، الأرصدة البنكية، الذهب والفضة، الاستثمارات بقيمتها السوقية، عروض التجارة، والديون المرجوّ سدادها.</li>
+        <li>اطرح الديون الحالّة التي عليك.</li>
+        <li>قارن الصافي بالنصاب: قيمة 85 غرامًا من الذهب الخالص أو 595 غرامًا من الفضة.</li>
+        <li>إذا بلغ الصافي النصاب وحال عليه الحول القمري، فالزكاة ربع العشر (2.5٪).</li>
+      </ol>
+    </div>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
